@@ -24,8 +24,9 @@ radioBoton4 = Radiobutton(ventana, text="Opcion 4", variable=opcion, value="Opci
 
 boton = Button(ventana, text="Selecciona una opcion", command=mostrarestado)
 boton.pack(pady=10)
+
 resultado = Label(ventana, text="")
 resultado.pack(pady=10)                     
 notificaciones = IntVar()
 
-ventana.mainloop()
+ventana.mainloop() 

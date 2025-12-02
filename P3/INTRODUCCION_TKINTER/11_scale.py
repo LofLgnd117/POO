@@ -10,6 +10,7 @@ def mostrarestado():
 
 #-------------------------------------------------- scale --------------------------------------------------
 valor = IntVar()
+
 escala = Scale(ventana, from_=0, to=100, orient=HORIZONTAL, variable=valor)
 escala.pack(pady=20)
 
@@ -19,4 +20,4 @@ boton.pack(pady=10)
 resultado = Label(ventana, text="")
 resultado.pack(pady=10)
 
-ventana.mainloop()
+ventana.mainloop() 

@@ -1,27 +1,24 @@
-from tkinter import *
-
+from tkinter import * 
 
 ventana = Tk()
-ventana.title("checkbutton")
+ventana.title("checkButton")
 ventana.geometry("500x500")
-#-------------------------------------------------- Función mostrar --------------------------------------------------
 
-def mostrarestado():
-    opcion = notificaciones.get()
-    if opcion == 1:
-        resultado.config(text="Notificaciones activadas")
+def mostrarEstado():
+    if opcion.get()==1:
+        resultado.config(text="Notificaciones Activadas")
     else:
-        resultado.config(text="Notificaciones desactivadas")
+        resultado.config(text="Notificaciones Desactivadas")
 
-boton = Button(ventana, text="Mostrar estado", command=mostrarestado)
-boton.pack(pady=10)
 
-resultado = Label(ventana, text="")
-resultado.pack(pady=10)
-                     
-#-------------------------------------------------- Checkbutton --------------------------------------------------
-notificaciones = IntVar()
-chk_notificaciones = Checkbutton(ventana, text="Activar notificaciones", variable=notificaciones)
-chk_notificaciones.pack(pady=20)
+opcion = IntVar()
+CheckBoton=Checkbutton(ventana, text="¿Deseas recibir notificaciones?", variable=opcion, onvalue=1, offvalue=0)
+CheckBoton.pack()
+
+boton=Button(ventana, text="Confirmar", command=mostrarEstado)
+boton.pack(pady=5)
+
+resultado=Label(ventana, text="")
+resultado.pack()
 
 ventana.mainloop()

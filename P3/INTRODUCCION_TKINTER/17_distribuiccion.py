@@ -1,7 +1,7 @@
-from tkinter import *
+from tkinter import * 
 
 ventana = Tk()
-ventana.title("Distribución")
+ventana.title("distribuccion")
 ventana.geometry("500x500")
 
 ventana.mainloop()

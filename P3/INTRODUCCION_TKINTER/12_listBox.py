@@ -1,37 +1,24 @@
-from tkinter import *
+from tkinter import * 
 
 ventana = Tk()
 ventana.title("listBox")
 ventana.geometry("500x500")
-#-------------------------------------------------- Función mostrar --------------------------------------------------
-def mostrarestado():
+
+def mostrarEstado():
     seleccion = lista.get(lista.curselection())
-    seleccionado = lista.get(lista.curselection())
-    resultado.config(text="Opción seleccionada: " + seleccion)
-#-------------------------------------------------- listbox --------------------------------------------------
+    resultado.config(text=f"Seleccionaste: {seleccion}")
 
-lista= Listbox(ventana, width=20, height=10, selectmode=SINGLE)
-lista.pack(pady=20)
+lista=Listbox(ventana, width=10, height=5, selectmode='single')
+lista.pack()
 
-opciones = ["Opción 1", "Opción 2", "Opción 3", "Opción 4"]
-for opcion in opciones:
-    lista.insert(END, opcion)
+opciones=['Amarillo','Rojo', 'Azul', 'Morado']
+for i in opciones:
+    lista.insert(END,i)
 
+boton=Button(ventana, text="Mostrar seleccion del usuario", command=mostrarEstado)
+boton.pack()
 
-lista = Listbox(ventana)
-lista.insert(1, "Opción 1")
-lista.insert(2, "Opción 2")
-lista.insert(3, "Opción 3")
-lista.insert(4, "Opción 4")
-lista.pack(pady=20)
-
-boton = Button(ventana, text="Mostrar seleccion", command=mostrarestado)
-boton.pack(pady=10)
-
-resultado = Label(ventana, text="")
-resultado.pack(pady=10)
-
-notificaciones = IntVar()
-
+resultado=Label(ventana, text="")
+resultado.pack()
 
 ventana.mainloop()

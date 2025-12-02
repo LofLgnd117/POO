@@ -48,4 +48,3 @@ class Nota:
           return True  
         except:    
           return False
-        

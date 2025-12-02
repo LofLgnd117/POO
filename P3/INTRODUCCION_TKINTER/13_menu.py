@@ -1,46 +1,37 @@
-from tkinter import *
+from tkinter import * 
+
+def mostrarEstado(tipo):
+    if tipo == "nuevo":   
+        resultado.config(text=f"Nuevo Archivo")
+    elif tipo == "guardar":
+        resultado.config(text=f"Guardar Archivo")
+    elif tipo == "copiar":
+        resultado.config(text=f"Archivo Copiado")
+    elif tipo == "recortar":
+        resultado.config(text=f"Archivo recortado")
 
 ventana = Tk()
 ventana.title("menu")
 ventana.geometry("500x500")
 
-#-------------------------------------------------- Función mostrar --------------------------------------------------
-def mostrarestado(tipo):
-    resultado.config(text=f"{tipo}" )
-    if tipo == "Nuevo Archivo" or tipo == "Nuevo Archivo2":
-        resultado.config(text="Has creado un nuevo archivo")
-    elif tipo == "Guardar Archivo" or tipo == "Guardar Archivo2":
-        resultado.config(text="Has guardado el archivo")
-    elif tipo == "Salir" or tipo == "Salir2":
-        ventana.quit()
-#------------------------------------------------------- menu --------------------------------------------------------
-menuBar = Menu(ventana)
-
+menuBar= Menu(ventana)
 ventana.config(menu=menuBar)
-archivoMenu = Menu(menuBar, tearoff=False)
+
+archivoMenu=Menu(menuBar, tearoff=False)
 menuBar.add_cascade(label="Archivo", menu=archivoMenu)
-archivoMenu.add_command(label="Nuevo Archivo", 
-                        command=lambda: mostrarestado("Nuevo Archivo"))
-archivoMenu.add_command(label="Guardar Archivo", 
-                        command=lambda: mostrarestado("Guardar Archivo"))
+archivoMenu.add_command(label="Nuevo Archivo",command=lambda: mostrarEstado("nuevo"))
+archivoMenu.add_command(label="Guardar Archivo",command=lambda: mostrarEstado("guardar"))
 archivoMenu.add_separator()
 archivoMenu.add_command(label="Salir", command=ventana.quit)
 
-ventana.config(menu=menuBar)
-archivoMenu2 = Menu(menuBar, tearoff=False)
-menuBar.add_cascade(label="Archivo2", menu=archivoMenu2)
-archivoMenu2.add_command(label="Nuevo Archivo2", 
-                        command=lambda: mostrarestado("Nuevo Archivo2"))
-archivoMenu2.add_command(label="Guardar Archivo2", 
-                        command=lambda: mostrarestado("Guardar Archivo2"))
+archivoMenu2=Menu(menuBar, tearoff=False)
+menuBar.add_cascade(label="Edición", menu=archivoMenu2)
+archivoMenu2.add_command(label="Copiar",command=lambda: mostrarEstado("copiar"))
+archivoMenu2.add_command(label="Recortar",command=lambda: mostrarEstado("recortar"))
 archivoMenu2.add_separator()
-archivoMenu2.add_command(label="Salir2", command=ventana.quit)
+archivoMenu2.add_command(label="Salir", command=ventana.quit)
 
-
-
-resultado = Label(ventana, text="")
-resultado.pack(pady=10)
-
-
+resultado=Label(ventana, text="")
+resultado.pack()
 
 ventana.mainloop()

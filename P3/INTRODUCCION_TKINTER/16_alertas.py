@@ -32,5 +32,5 @@ boton2.pack()
 
 etiqueta=Label(ventana, text="")
 etiqueta.pack()
-
+ 
 ventana.mainloop()

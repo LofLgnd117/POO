@@ -1,5 +1,5 @@
 
-from notas_system2.conexionBD import *
+from conexionBD import *
 import hashlib
 import datetime
 
@@ -33,6 +33,4 @@ class Usuario:
             else:
                 return None      
         except:
-          return None         
-        
-
+          return None
