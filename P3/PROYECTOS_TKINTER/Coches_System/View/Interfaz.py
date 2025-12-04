@@ -31,7 +31,7 @@ class Vistas:
         Button(self.ventana, text="3.- Camiones", width=30, height=2,
                command=lambda: self.menu_acciones("Camiones")).pack(pady=10)
         
-        Button(self.ventana, text="4.- Salir", width=30, bg="#FFCDD2",
+        Button(self.ventana, text="4.- Salir", width=30,
                command=self.ventana.quit).pack(pady=20)
 
     def menu_acciones(self, tipo):
@@ -48,7 +48,7 @@ class Vistas:
         Button(self.ventana, text="2.- Consultar", width=20, command=cmd_consultar).pack(pady=5)
         Button(self.ventana, text="3.- Actualizar", width=20, command=cmd_cambiar).pack(pady=5)
         Button(self.ventana, text="4.- Eliminar", width=20, command=cmd_borrar).pack(pady=5)
-        Button(self.ventana, text="5.- Regresar", width=20, bg="#BBDEFB", command=self.menu_principal).pack(pady=20)
+        Button(self.ventana, text="5.- Regresar", width=20, command=self.menu_principal).pack(pady=20)
 
     # ------------------------------------------------------------------
     #                           AUTOS
@@ -72,7 +72,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Auto guardado"); self.menu_acciones("Autos")
             else: messagebox.showerror("Error", "No se pudo guardar")
 
-        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=15)
+        Button(self.ventana, text="Guardar", command=guardar).pack(pady=15)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
     def consultar_autos(self):
@@ -112,7 +112,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Auto actualizado"); self.menu_acciones("Autos")
             else: messagebox.showerror("Error", "Error al actualizar")
 
-        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Actualizar", command=actualizar).pack(pady=15)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
     def borrar_autos(self):
@@ -131,7 +131,7 @@ class Vistas:
                 if res: messagebox.showinfo("Éxito", "Eliminado"); self.menu_acciones("Autos")
                 else: messagebox.showerror("Error", "No existe ID")
 
-        Button(self.ventana, text="Eliminar", bg="#FFCDD2", command=eliminar).pack(pady=20)
+        Button(self.ventana, text="Eliminar", command=eliminar).pack(pady=20)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
     # ------------------------------------------------------------------
@@ -159,7 +159,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Camioneta guardada"); self.menu_acciones("Camionetas")
             else: messagebox.showerror("Error", "Error al guardar")
 
-        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=20)
+        Button(self.ventana, text="Guardar", command=guardar).pack(pady=20)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
 
     def consultar_camionetas(self):
@@ -205,7 +205,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Actualizado"); self.menu_acciones("Camionetas")
             else: messagebox.showerror("Error", "Error al actualizar")
 
-        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Actualizar", command=actualizar).pack(pady=15)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
 
     def borrar_camionetas(self):
@@ -222,7 +222,7 @@ class Vistas:
                     self.menu_acciones("Camionetas")
                 else: messagebox.showerror("Error", "Fallo al eliminar")
 
-        Button(self.ventana, text="Borrar", bg="#FFCDD2", command=eliminar).pack(pady=10)
+        Button(self.ventana, text="Borrar", command=eliminar).pack(pady=10)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
 
     # ------------------------------------------------------------------
@@ -245,7 +245,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Camión guardado"); self.menu_acciones("Camiones")
             else: messagebox.showerror("Error", "Error al guardar")
 
-        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=20)
+        Button(self.ventana, text="Guardar", command=guardar).pack(pady=20)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
 
     def consultar_camiones(self):
@@ -281,7 +281,7 @@ class Vistas:
             if res: messagebox.showinfo("Éxito", "Actualizado"); self.menu_acciones("Camiones")
             else: messagebox.showerror("Error", "Error al actualizar")
 
-        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Actualizar", command=actualizar).pack(pady=15)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
 
     def borrar_camiones(self):
@@ -298,5 +298,5 @@ class Vistas:
                     self.menu_acciones("Camiones")
                 else: messagebox.showerror("Error", "Fallo al eliminar")
 
-        Button(self.ventana, text="Borrar", bg="#FFCDD2", command=eliminar).pack(pady=10)
+        Button(self.ventana, text="Borrar", command=eliminar).pack(pady=10)
         Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
