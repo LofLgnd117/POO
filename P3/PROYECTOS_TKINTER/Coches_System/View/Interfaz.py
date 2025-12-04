@@ -1,160 +1,302 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
+# Importamos los modelos
+from Model import Autos, Camiones, Camionetas
 
+class Vistas:
+    def __init__(self, ventana):
+        self.ventana = ventana
+        self.ventana.geometry("900x600")
+        self.ventana.title("Coches System MVC")
+        self.menu_principal()
 
-class Vistas():
-    def __init__(self,ventana):
-        ventana.geometry("800x600")
-        ventana.title("Coches system")
-        self.menu_principal(ventana)
-
-    def borrarPantalla(self,ventana):
-        for widget in ventana.winfo_children():
+    def borrarPantalla(self):
+        for widget in self.ventana.winfo_children():
             widget.destroy()
 
-    def menu_principal(self,ventana):
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text=".:: Menu principal ::.")
-        lblTitulo.pack(pady=5)
-        btnCoches=Button(ventana,text="1.- Coches",command=lambda : self.menu_acciones(ventana,"coches"))
-        btnCoches.pack(pady=5)
-        btnCamiones=Button(ventana,text="2.- Camiones",command=lambda: "self.menu_acciones(ventana,camiones)")
-        btnCamiones.pack(pady=5)
-        btnCamionetas=Button(ventana,text="3.- Camionetas",command=lambda: "self.menu_acciones(ventana,camionetas)")
-        btnCamionetas.pack(pady=5)
-        btnSalir=Button(ventana,text="4.- Salir",command=ventana.quit)
-        btnSalir.pack(pady=5)
+    # ------------------------------------------------------------------
+    #                           MENUS
+    # ------------------------------------------------------------------
+    def menu_principal(self):
+        self.borrarPantalla()
+        Label(self.ventana, text=".:: Menu Principal ::.", font=("Arial", 20, "bold")).pack(pady=20)
+        
+        Button(self.ventana, text="1.- Autos", width=30, height=2, 
+               command=lambda: self.menu_acciones("Autos")).pack(pady=10)
+        
+        Button(self.ventana, text="2.- Camionetas", width=30, height=2,
+               command=lambda: self.menu_acciones("Camionetas")).pack(pady=10)
+        
+        Button(self.ventana, text="3.- Camiones", width=30, height=2,
+               command=lambda: self.menu_acciones("Camiones")).pack(pady=10)
+        
+        Button(self.ventana, text="4.- Salir", width=30, bg="#FFCDD2",
+               command=self.ventana.quit).pack(pady=20)
 
-    def menu_acciones(self,ventana,vehiculo):
-        global tipo
-        tipo=vehiculo
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text=f"Menu de {tipo}")
-        lblTitulo.pack(pady=5)
-        btnAgregar=Button(ventana,text="1.-Agregar",command=lambda: self.insertar_autos(ventana))
-        btnAgregar.pack(pady=5)
-        btnMostrar=Button(ventana,text="2.-Mostrar",command=lambda: self.consultar_autos()(ventana))
-        btnMostrar.pack(pady=5)
-        btnCambiar=Button(ventana,text="3.-Cambiar",command=lambda: self.cambiar_autos(ventana))
-        btnCambiar.pack(pady=5)
-        btnEliminar=Button(ventana,text="4.-Eliminar",command=lambda: self.borrar_autos()(ventana))
-        btnEliminar.pack(pady=5)
-        btnSalir=Button(ventana,text="5.-Volver",command=lambda: self.menu_principal(ventana))
-        btnSalir.pack(pady=5)
+    def menu_acciones(self, tipo):
+        self.borrarPantalla()
+        Label(self.ventana, text=f"Menu de {tipo}", font=("Arial", 18)).pack(pady=10)
+        
+        # Definir comandos dinámicamente según el tipo
+        cmd_insertar = getattr(self, f"insertar_{tipo.lower()}")
+        cmd_consultar = getattr(self, f"consultar_{tipo.lower()}")
+        cmd_cambiar = getattr(self, f"cambiar_{tipo.lower()}")
+        cmd_borrar = getattr(self, f"borrar_{tipo.lower()}")
 
+        Button(self.ventana, text="1.- Insertar", width=20, command=cmd_insertar).pack(pady=5)
+        Button(self.ventana, text="2.- Consultar", width=20, command=cmd_consultar).pack(pady=5)
+        Button(self.ventana, text="3.- Actualizar", width=20, command=cmd_cambiar).pack(pady=5)
+        Button(self.ventana, text="4.- Eliminar", width=20, command=cmd_borrar).pack(pady=5)
+        Button(self.ventana, text="5.- Regresar", width=20, bg="#BBDEFB", command=self.menu_principal).pack(pady=20)
 
-    def insertar_autos(self,ventana):
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text="Agregar coches")
-        lblTitulo.pack(pady=5)
-        lblMarca=Label(ventana,text="Inserte marca")
-        lblMarca.pack()
-        txtMarca=Entry(ventana)
-        txtMarca.pack(pady=5)
+    # ------------------------------------------------------------------
+    #                           AUTOS
+    # ------------------------------------------------------------------
+    def insertar_autos(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Insertar Auto", font=("Arial", 16)).pack(pady=10)
+        
+        vars_auto = [StringVar() for _ in range(6)] # marca, color, modelo, velocidad, cab, plazas
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas"]
+        
+        frm = Frame(self.ventana)
+        frm.pack()
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i, column=0, padx=10, pady=5, sticky=E)
+            Entry(frm, textvariable=vars_auto[i]).grid(row=i, column=1, padx=10, pady=5)
 
-        lblColor=Label(ventana,text="Inserte el color")
-        lblColor.pack()
-        txtColor=Entry(ventana)
-        txtColor.pack(pady=5)
+        def guardar():
+            res = Autos.Autos.insertar(*[v.get() for v in vars_auto])
+            if res: messagebox.showinfo("Éxito", "Auto guardado"); self.menu_acciones("Autos")
+            else: messagebox.showerror("Error", "No se pudo guardar")
 
-        lblModelo=Label(ventana,text="Inserte el modelo")
-        lblModelo.pack()
-        txtModelo=Entry(ventana)
-        txtModelo.pack(pady=5)
+        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=15)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
-        lblVelocidad=Label(ventana,text="Inserte la velocidad")
-        lblVelocidad.pack()
-        txtVelocidad=Entry(ventana)
-        txtVelocidad.pack(pady=5)
+    def consultar_autos(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Listado de Autos", font=("Arial", 16)).pack(pady=10)
+        
+        tree = ttk.Treeview(self.ventana, columns=("ID","Marca","Color","Modelo","Vel","Cab","Pla"), show='headings')
+        for col in tree['columns']: tree.heading(col, text=col); tree.column(col, width=100)
+        tree.pack(pady=10, fill=X, padx=20)
 
-        lblPotencia=Label(ventana,text="Inserte la potencia")
-        lblPotencia.pack()
-        txtPotencia=Entry(ventana)
-        txtPotencia.pack(pady=5)
+        datos = Autos.Autos.consultar()
+        for d in datos: tree.insert("", END, values=d)
 
-        lblPlazas=Label(ventana,text="Inserte las plazas")
-        lblPlazas.pack()
-        txtPlazas=Entry(ventana)
-        txtPlazas.pack(pady=5)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack(pady=10)
 
-        btnAgregar=Button(ventana,text="Agregar",command= lambda: "")
-        btnAgregar.pack(pady=5)
-        btnVolver=Button(ventana,text="Volver",command= lambda: self.menu_acciones(ventana,tipo))
-        btnVolver.pack(pady=5)
+    def cambiar_autos(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Actualizar Auto", font=("Arial", 16)).pack(pady=10)
+        
+        # ID y Datos
+        v_id = StringVar()
+        vars_auto = [StringVar() for _ in range(6)]
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas"]
+        
+        frm = Frame(self.ventana)
+        frm.pack()
+        
+        Label(frm, text="ID a modificar:").grid(row=0, column=0, padx=5, pady=5, sticky=E)
+        Entry(frm, textvariable=v_id).grid(row=0, column=1, padx=5, pady=5)
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i+1, column=0, padx=5, pady=5, sticky=E)
+            Entry(frm, textvariable=vars_auto[i]).grid(row=i+1, column=1, padx=5, pady=5)
 
-    def consultar_autos(self,ventana):
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text="Coches agregados")
-        lblTitulo.pack(pady=5)
-        filas=""
-        registros=[("1","Toyota","Rojo","2019","180","300","4"),("2","Renoult","Gris","2019","300","400","4")]
-        if len(registros)>0:
-          num_autos=1
-          for fila in registros:
-            filas=filas+f"\nAuto #{num_autos} con ID: {fila[0]} \nMarca: {fila[1]} Color: {fila[2]} Modelo: {fila[3]} Velocidad: {fila[4]} Potencia: {fila[5]} Plazas: {fila[6]}"
-            num_autos+=1
-        else:
-            messagebox.showinfo(message="No hay coches por el momento en el sistema")
+        def actualizar():
+            res = Autos.Autos.actualizar(v_id.get(), *[v.get() for v in vars_auto])
+            if res: messagebox.showinfo("Éxito", "Auto actualizado"); self.menu_acciones("Autos")
+            else: messagebox.showerror("Error", "Error al actualizar")
 
-        lblNote=Label(ventana,text=filas)
-        lblNote.pack(pady=5)
-        btnVolver=Button(ventana,text="Volver",command=lambda: self.menu_acciones(ventana,tipo))
-        btnVolver.pack(pady=5)
+        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
-    def cambiar_autos(self,ventana):
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text="Modificar el coche")
-        lblTitulo.pack(pady=5)
+    def borrar_autos(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Borrar Auto", font=("Arial", 16)).pack(pady=10)
+        v_id = StringVar()
+        
+        frm = Frame(self.ventana)
+        frm.pack()
+        Label(frm, text="Ingrese ID:").pack(side=LEFT, padx=5)
+        Entry(frm, textvariable=v_id).pack(side=LEFT, padx=5)
+        
+        def eliminar():
+            if messagebox.askyesno("Confirmar", "¿Seguro que desea eliminar?"):
+                res = Autos.Autos.eliminar(v_id.get())
+                if res: messagebox.showinfo("Éxito", "Eliminado"); self.menu_acciones("Autos")
+                else: messagebox.showerror("Error", "No existe ID")
 
-        lblId=Label(ventana,text="Ingrese el id")
-        lblId.pack(pady=5)
-        txtId=Entry(ventana)
-        txtId.pack()
+        Button(self.ventana, text="Eliminar", bg="#FFCDD2", command=eliminar).pack(pady=20)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Autos")).pack()
 
-        lblMarca=Label(ventana,text="Inserte la marca")
-        lblMarca.pack()
-        txtMarca=Entry(ventana)
-        txtMarca.pack(pady=5)
+    # ------------------------------------------------------------------
+    #                           CAMIONETAS
+    # ------------------------------------------------------------------
+    def insertar_camionetas(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Insertar Camioneta", font=("Arial", 16)).pack(pady=10)
+        
+        vars_c = [StringVar() for _ in range(7)] # Marca...Traccion
+        v_cerrada = BooleanVar()
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas", "Tracción"]
+        
+        frm = Frame(self.ventana)
+        frm.pack()
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i, column=0, sticky=E, pady=5)
+            Entry(frm, textvariable=vars_c[i]).grid(row=i, column=1, pady=5)
+        
+        Checkbutton(frm, text="¿Es Cerrada?", variable=v_cerrada).grid(row=7, column=1, sticky=W)
 
-        lblColor=Label(ventana,text="Inserte el color")
-        lblColor.pack()
-        txtColor=Entry(ventana)
-        txtColor.pack(pady=5)
+        def guardar():
+            res = Camionetas.Camionetas.insertar(*[v.get() for v in vars_c], v_cerrada.get())
+            if res: messagebox.showinfo("Éxito", "Camioneta guardada"); self.menu_acciones("Camionetas")
+            else: messagebox.showerror("Error", "Error al guardar")
 
-        lblModelo=Label(ventana,text="Inserte el modelo")
-        lblModelo.pack()
-        txtModelo=Entry(ventana)
-        txtModelo.pack(pady=5)
+        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=20)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
 
-        lblVelocidad=Label(ventana,text="Inserte la velocidad")
-        lblVelocidad.pack()
-        txtVelocidad=Entry(ventana)
-        txtVelocidad.pack(pady=5)
+    def consultar_camionetas(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Listado de Camionetas", font=("Arial", 16)).pack(pady=10)
+        
+        cols = ("ID", "Marca", "Color", "Modelo", "Vel", "Cab", "Pla", "Trac", "Cerrada")
+        tree = ttk.Treeview(self.ventana, columns=cols, show="headings")
+        for c in cols: tree.heading(c, text=c); tree.column(c, width=80)
+        tree.pack(fill=X, padx=20, pady=10)
 
-        lblPotencia=Label(ventana,text="Inserte la potencia")
-        lblPotencia.pack()
-        txtPotencia=Entry(ventana)
-        txtPotencia.pack(pady=5)
+        datos = Camionetas.Camionetas.consultar()
+        for d in datos:
+            # Convertir el 1/0 de la BD a Si/No para visualización
+            lista_d = list(d)
+            lista_d[8] = "Si" if lista_d[8] == 1 else "No"
+            tree.insert("", END, values=lista_d)
 
-        lblPlazas=Label(ventana,text="Inserte las plazas")
-        lblPlazas.pack()
-        txtPlazas=Entry(ventana)
-        txtPlazas.pack(pady=5)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack(pady=10)
 
-        btnGuardar=Button(ventana,text="Guardar",command= lambda: "")
-        btnGuardar.pack(pady=5)
-        btnVolver=Button(ventana,text="Volver",command= lambda: self.menu_acciones(ventana,tipo))
-        btnVolver.pack(pady=5)
+    def cambiar_camionetas(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Actualizar Camioneta", font=("Arial", 16)).pack(pady=10)
+        
+        v_id = StringVar()
+        vars_c = [StringVar() for _ in range(7)]
+        v_cerrada = BooleanVar()
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas", "Tracción"]
 
-    def borrar_autos(self,ventana):
-        self.borrarPantalla(ventana)
-        lblTitulo=Label(ventana,text="Eliminar un coche")
-        lblTitulo.pack(pady=5)
-        lblId=Label(ventana,text="Ingrese el id")
-        lblId.pack(pady=5)
-        txtId=Entry(ventana)
-        txtId.pack()
-        btnEliminar=Button(ventana,text="Eliminar",command= lambda:"")
-        btnEliminar.pack(pady=5)
-        btnVolver=Button(ventana,text="Volver",command= lambda: self.menu_acciones(ventana,tipo))
-        btnVolver.pack(pady=5)
+        frm = Frame(self.ventana)
+        frm.pack()
+        
+        Label(frm, text="ID a modificar:").grid(row=0, column=0, sticky=E)
+        Entry(frm, textvariable=v_id).grid(row=0, column=1)
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i+1, column=0, sticky=E, pady=2)
+            Entry(frm, textvariable=vars_c[i]).grid(row=i+1, column=1, pady=2)
+        Checkbutton(frm, text="¿Es Cerrada?", variable=v_cerrada).grid(row=8, column=1, sticky=W)
+
+        def actualizar():
+            res = Camionetas.Camionetas.actualizar(v_id.get(), *[v.get() for v in vars_c], v_cerrada.get())
+            if res: messagebox.showinfo("Éxito", "Actualizado"); self.menu_acciones("Camionetas")
+            else: messagebox.showerror("Error", "Error al actualizar")
+
+        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
+
+    def borrar_camionetas(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Borrar Camioneta", font=("Arial", 16)).pack(pady=10)
+        v_id = StringVar()
+        frm = Frame(self.ventana); frm.pack()
+        Label(frm, text="ID:").pack(side=LEFT); Entry(frm, textvariable=v_id).pack(side=LEFT)
+        
+        def eliminar():
+            if messagebox.askyesno("Confirmar", "¿Eliminar?"):
+                if Camionetas.Camionetas.eliminar(v_id.get()):
+                    messagebox.showinfo("Éxito", "Eliminado")
+                    self.menu_acciones("Camionetas")
+                else: messagebox.showerror("Error", "Fallo al eliminar")
+
+        Button(self.ventana, text="Borrar", bg="#FFCDD2", command=eliminar).pack(pady=10)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camionetas")).pack()
+
+    # ------------------------------------------------------------------
+    #                           CAMIONES
+    # ------------------------------------------------------------------
+    def insertar_camiones(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Insertar Camión", font=("Arial", 16)).pack(pady=10)
+        
+        vars_k = [StringVar() for _ in range(8)]
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas", "Ejes", "Carga"]
+        frm = Frame(self.ventana); frm.pack()
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i, column=0, sticky=E, pady=5)
+            Entry(frm, textvariable=vars_k[i]).grid(row=i, column=1, pady=5)
+            
+        def guardar():
+            res = Camiones.Camiones.insertar(*[v.get() for v in vars_k])
+            if res: messagebox.showinfo("Éxito", "Camión guardado"); self.menu_acciones("Camiones")
+            else: messagebox.showerror("Error", "Error al guardar")
+
+        Button(self.ventana, text="Guardar", bg="#C8E6C9", command=guardar).pack(pady=20)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
+
+    def consultar_camiones(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Listado de Camiones", font=("Arial", 16)).pack(pady=10)
+        cols = ("ID", "Marca", "Color", "Modelo", "Vel", "Cab", "Pla", "Ejes", "Carga")
+        tree = ttk.Treeview(self.ventana, columns=cols, show="headings")
+        for c in cols: tree.heading(c, text=c); tree.column(c, width=80)
+        tree.pack(fill=X, padx=20, pady=10)
+        
+        datos = Camiones.Camiones.consultar()
+        for d in datos: tree.insert("", END, values=d)
+        
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack(pady=10)
+
+    def cambiar_camiones(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Actualizar Camión", font=("Arial", 16)).pack(pady=10)
+        v_id = StringVar()
+        vars_k = [StringVar() for _ in range(8)]
+        labels = ["Marca", "Color", "Modelo", "Velocidad", "Caballaje", "Plazas", "Ejes", "Carga"]
+        
+        frm = Frame(self.ventana); frm.pack()
+        Label(frm, text="ID a modificar:").grid(row=0, column=0, sticky=E)
+        Entry(frm, textvariable=v_id).grid(row=0, column=1)
+        
+        for i, lab in enumerate(labels):
+            Label(frm, text=lab).grid(row=i+1, column=0, sticky=E, pady=2)
+            Entry(frm, textvariable=vars_k[i]).grid(row=i+1, column=1, pady=2)
+
+        def actualizar():
+            res = Camiones.Camiones.actualizar(v_id.get(), *[v.get() for v in vars_k])
+            if res: messagebox.showinfo("Éxito", "Actualizado"); self.menu_acciones("Camiones")
+            else: messagebox.showerror("Error", "Error al actualizar")
+
+        Button(self.ventana, text="Actualizar", bg="#FFF9C4", command=actualizar).pack(pady=15)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
+
+    def borrar_camiones(self):
+        self.borrarPantalla()
+        Label(self.ventana, text="Borrar Camión", font=("Arial", 16)).pack(pady=10)
+        v_id = StringVar()
+        frm = Frame(self.ventana); frm.pack()
+        Label(frm, text="ID:").pack(side=LEFT); Entry(frm, textvariable=v_id).pack(side=LEFT)
+        
+        def eliminar():
+            if messagebox.askyesno("Confirmar", "¿Eliminar?"):
+                if Camiones.Camiones.eliminar(v_id.get()):
+                    messagebox.showinfo("Éxito", "Eliminado")
+                    self.menu_acciones("Camiones")
+                else: messagebox.showerror("Error", "Fallo al eliminar")
+
+        Button(self.ventana, text="Borrar", bg="#FFCDD2", command=eliminar).pack(pady=10)
+        Button(self.ventana, text="Volver", command=lambda: self.menu_acciones("Camiones")).pack()
